@@ -31,14 +31,14 @@ export interface ConfigType {
 }
 
 export const CONFIG: ConfigType = {
-  // Contract Details - Deployed to Stellar testnet (2024/2025)
-  CONTRACT_ADDRESS: 'CCIRMCEMLWUSL6UQJVUR6TH4VERFAH537NTCEWC6IA3AFB2MRL76VI65',
+  // Contract Details - Deployed to Stellar testnet (2024/2025) - Fixed unreachable code issues
+  CONTRACT_ADDRESS: 'CBRTSDDM6QILNQFY4ZFZWMVUYHMCV74TUOXX4P2QFIAXP5A5RNJRS3F2',
   
   // Network Configuration - Testnet with latest RPC endpoints
   NETWORK_PASSPHRASE: 'Test SDF Network ; September 2015',
   HORIZON_URL: 'https://horizon-testnet.stellar.org',
   SOROBAN_RPC_URL: 'https://soroban-testnet.stellar.org:443',
-  CONTRACT_EXPLORER: 'https://stellar.expert/explorer/testnet/contract/CCIRMCEMLWUSL6UQJVUR6TH4VERFAH537NTCEWC6IA3AFB2MRL76VI65',
+  CONTRACT_EXPLORER: 'https://stellar.expert/explorer/testnet/contract/CBRTSDDM6QILNQFY4ZFZWMVUYHMCV74TUOXX4P2QFIAXP5A5RNJRS3F2',
   TESTNET_EXPLORER: 'https://stellar.expert/explorer/testnet',
   
   // Real Testnet Token Addresses
