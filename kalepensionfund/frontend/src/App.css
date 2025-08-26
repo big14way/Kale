@@ -1,0 +1,883 @@
+/* KALE Pension Fund Styles */
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: #333;
+}
+
+/* Header */
+.app-header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.app-header h1 {
+  color: #2d5a4a;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.app-header p {
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Wallet Connect */
+.wallet-connect, .wallet-connected {
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+.connect-btn, .disconnect-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.connect-btn:hover, .disconnect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.connect-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.wallet-connected {
+  background: rgba(76, 175, 80, 0.1);
+  padding: 10px 20px;
+  border-radius: 20px;
+  border: 2px solid #4CAF50;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wallet-address {
+  font-family: monospace;
+  font-weight: 600;
+  color: #2d5a4a;
+}
+
+.disconnect-btn {
+  background: #f44336;
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  margin-left: 10px;
+}
+
+/* Main content */
+.app-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Welcome section */
+.welcome-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 3rem;
+  margin: 2rem 0;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-content h2 {
+  color: #2d5a4a;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.feature {
+  background: rgba(76, 175, 80, 0.05);
+  padding: 1.5rem;
+  border-radius: 15px;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  text-align: center;
+}
+
+.feature h3 {
+  color: #2d5a4a;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+}
+
+.feature p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.connect-prompt {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+  margin-top: 2rem;
+}
+
+/* Dashboard */
+.dashboard {
+  margin-top: 2rem;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Full width sections */
+.full-width {
+  grid-column: 1 / -1;
+}
+
+/* Responsive grid adjustments */
+@media (min-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Portfolio section */
+.portfolio {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.portfolio h3 {
+  color: #2d5a4a;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.portfolio-summary {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.total-value h4 {
+  color: #2d5a4a;
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.portfolio-chart {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+.asset-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.asset-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background: rgba(76, 175, 80, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.asset-name {
+  font-weight: 600;
+  color: #2d5a4a;
+}
+
+.asset-balance, .asset-value {
+  font-family: monospace;
+  color: #666;
+}
+
+.price-info {
+  margin-top: 1rem;
+}
+
+.price-info h4 {
+  color: #2d5a4a;
+  margin-bottom: 0.5rem;
+}
+
+.price-item {
+  font-family: monospace;
+  color: #666;
+  margin-bottom: 0.3rem;
+}
+
+/* Loading and error states */
+.portfolio-loading, .portfolio-error, .portfolio-empty, .portfolio-placeholder {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.loading-section {
+  text-align: center;
+  padding: 3rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Deposit section */
+.deposit-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.deposit-section h3 {
+  color: #2d5a4a;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.deposit-form {
+  margin-bottom: 2rem;
+}
+
+.input-group {
+  margin-bottom: 1.5rem;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #2d5a4a;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+}
+
+.deposit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.deposit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+.deposit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Risk Profile section */
+.risk-profile-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.risk-profile-section h3 {
+  color: #2d5a4a;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.risk-profiles {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.risk-card {
+  padding: 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.risk-card:hover {
+  border-color: #4CAF50;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.2);
+}
+
+.risk-card.selected {
+  border-color: #4CAF50;
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.risk-card.current {
+  border-color: #2196F3;
+  background: rgba(33, 150, 243, 0.05);
+}
+
+.risk-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.risk-header h4 {
+  color: #2d5a4a;
+  margin: 0;
+}
+
+.current-badge {
+  background: #2196F3;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.allocation-chart {
+  margin-bottom: 1rem;
+}
+
+.allocation-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.allocation-segment {
+  height: 100%;
+  transition: width 0.3s ease;
+}
+
+.allocation-segment.usdc {
+  background: #2196F3;
+}
+
+.allocation-segment.btc {
+  background: #FF9800;
+}
+
+.allocation-segment.kale {
+  background: #4CAF50;
+}
+
+.allocation-details {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.allocation-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.asset-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.asset-color.usdc {
+  background: #2196F3;
+}
+
+.asset-color.btc {
+  background: #FF9800;
+}
+
+.asset-color.kale {
+  background: #4CAF50;
+}
+
+.risk-description p {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.update-risk-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.update-risk-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
+}
+
+.update-risk-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Actions section */
+.actions-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.actions-section h3 {
+  color: #2d5a4a;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.actions-grid {
+  display: grid;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.action-card {
+  padding: 1.5rem;
+  border: 2px solid #ddd;
+  border-radius: 15px;
+  background: white;
+}
+
+.action-card h4 {
+  color: #2d5a4a;
+  margin-bottom: 1rem;
+}
+
+.action-card p {
+  color: #666;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1rem;
+}
+
+.rebalance-btn {
+  background: linear-gradient(135deg, #2196F3, #1976D2);
+  color: white;
+}
+
+.withdraw-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+  color: white;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+  color: white;
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.withdraw-confirm {
+  text-align: center;
+}
+
+.confirm-text {
+  color: #ff6b6b;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.confirm-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.action-info {
+  margin-top: 1rem;
+}
+
+.action-info small {
+  color: #666;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+/* Messages */
+.message {
+  padding: 1rem;
+  border-radius: 10px;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.error-message {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  color: #d32f2f;
+}
+
+.success-message {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3);
+  color: #2e7d32;
+}
+
+.info-message {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3);
+  color: #1976d2;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0;
+  width: auto;
+}
+
+/* Info sections */
+.deposit-info, .risk-info, .actions-info {
+  background: rgba(76, 175, 80, 0.05);
+  padding: 1.5rem;
+  border-radius: 10px;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  margin-top: 2rem;
+}
+
+.deposit-info h4, .risk-info h4, .actions-info h4 {
+  color: #2d5a4a;
+  margin-bottom: 1rem;
+}
+
+.deposit-info ul, .risk-info ul, .actions-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.deposit-info li, .risk-info li, .actions-info li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid rgba(76, 175, 80, 0.1);
+  color: #666;
+  line-height: 1.5;
+}
+
+.deposit-info li:last-child, .risk-info li:last-child, .actions-info li:last-child {
+  border-bottom: none;
+}
+
+/* Footer */
+.app-footer {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  margin-top: 4rem;
+  padding: 3rem 2rem 1rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h4 {
+  color: #2d5a4a;
+  margin-bottom: 1rem;
+}
+
+.footer-section p {
+  color: #666;
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section li {
+  color: #666;
+  padding: 0.3rem 0;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+  color: #666;
+}
+
+.error-message, .install-freighter {
+  margin-top: 1rem;
+}
+
+.install-link {
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.install-link:hover {
+  text-decoration: underline;
+}
+
+.retry-btn {
+  background: linear-gradient(135deg, #4CAF50, #45a049);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.retry-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .portfolio-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .features {
+    grid-template-columns: 1fr;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .app-header h1 {
+    font-size: 2rem;
+  }
+  
+  .app-main {
+    padding: 1rem;
+  }
+  
+  .confirm-buttons {
+    grid-template-columns: 1fr;
+  }
+  
+  .allocation-details {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/* Enhanced Button Styles */
+.faucet-btn, .risk-update-btn, .rebalance-btn, .withdraw-btn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: none;
+}
+
+.faucet-btn {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+}
+
+.rebalance-btn {
+  background: linear-gradient(135deg, #17a2b8, #138496);
+  color: white;
+}
+
+.withdraw-btn {
+  background: linear-gradient(135deg, #fd7e14, #e6681e);
+  color: white;
+}
+
+.risk-update-btn {
+  background: linear-gradient(135deg, #6f42c1, #5a379a);
+  color: white;
+}
+
+/* Component-specific styles */
+.kale-faucet, .risk-profile-manager, .portfolio-actions {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.kale-faucet h3, .risk-profile-manager h3, .portfolio-actions h3 {
+  color: #2d5a4a;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.risk-options {
+  margin: 1rem 0;
+}
+
+.risk-options label {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.risk-options label:hover {
+  background: rgba(76, 175, 80, 0.05);
+}
+
+.risk-options input[type="radio"] {
+  margin-right: 0.5rem;
+}
+
+.action-section {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid rgba(76, 175, 80, 0.2);
+  border-radius: 10px;
+  background: rgba(76, 175, 80, 0.02);
+}
+
+.action-section h4 {
+  color: #2d5a4a;
+  margin-bottom: 0.5rem;
+}
