@@ -12,7 +12,7 @@ import {
   Horizon
 } from '@stellar/stellar-sdk';
 import { Server as SorobanServer } from '@stellar/stellar-sdk/rpc';
-import { stellarWalletService } from './stellar-wallet-kit';
+// Removed unused stellar-wallet-kit import
 import CONFIG from './config';
 
 export interface Portfolio {
