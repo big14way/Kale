@@ -3,6 +3,8 @@ import { useWallet } from './hooks/useWallet';
 import { useContract } from './hooks/useContract';
 import type { Portfolio } from './hooks/useContract';
 import CONFIG from './utils/config';
+import { PriceTest } from './components/PriceTest';
+import { WalletTest } from './components/WalletTest';
 
 // Ultra-modern gradient button component
 const GradientButton: React.FC<{
@@ -480,6 +482,12 @@ const App: React.FC = () => {
                   </span>
                 </p>
               </GlassCard>
+
+              {/* Test Components */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <PriceTest />
+                <WalletTest />
+              </div>
 
               {/* Main Dashboard */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

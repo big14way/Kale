@@ -139,13 +139,21 @@ export const useWallet = (): WalletState & WalletActions => {
     }
 
     try {
-      const { signedTxXdr } = await walletKit.signTransaction(xdr, {
-        address: state.address,
-        networkPassphrase: 'Test SDF Network ; September 2015',
-      });
-
-      return signedTxXdr;
+      // Try primary wallet kit first
+      if (walletKit) {
+        const { signedTxXdr } = await walletKit.signTransaction(xdr, {
+          address: state.address,
+          networkPassphrase: 'Test SDF Network ; September 2015',
+        });
+        return signedTxXdr;
+      }
+      
+      // Fallback to direct Freighter integration
+      console.log('🔄 Wallet kit unavailable, trying direct Freighter...');
+      const { WalletHelper } = await import('../utils/wallet-helper');
+      return await WalletHelper.signTransaction(xdr, state.address);
     } catch (error) {
+      console.error('❌ Transaction signing failed:', error);
       throw new Error(
         error instanceof Error ? error.message : 'Failed to sign transaction'
       );

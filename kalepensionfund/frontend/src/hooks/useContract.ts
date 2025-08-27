@@ -142,12 +142,28 @@ export const useContract = (): ContractState & ContractActions => {
   }, [isConnected, walletAddress, handleContractCall]);
 
   const getPrice = useCallback(async (pair: string): Promise<number> => {
-    return handleContractCall(async () => {
+    try {
+      // Try to get price from contract/oracle first
       const result = await sorobanService.getPrice(pair);
       // Convert from contract units (7 decimal places) to regular number
-      return result / 10_000_000;
-    }, 'Get price');
-  }, [handleContractCall]);
+      const price = result / 10_000_000;
+      
+      // If we get a valid price, return it
+      if (price > 0) {
+        return price;
+      }
+      
+      // Fallback to real API prices if oracle returns 0
+      console.log(`🔄 Oracle returned 0 for ${pair}, using real API fallback`);
+      const { RealPriceService } = await import('../utils/real-prices');
+      return await RealPriceService.getPrice(pair);
+    } catch (error) {
+      console.warn(`⚠️ Contract price fetch failed for ${pair}, using real API:`, error);
+      // Use real price service as fallback
+      const { RealPriceService } = await import('../utils/real-prices');
+      return await RealPriceService.getPrice(pair);
+    }
+  }, []);
 
   const rebalance = useCallback(async (): Promise<string> => {
     if (!isConnected || !walletAddress) {
