@@ -33,7 +33,7 @@ export const useContract = (): ContractState & ContractActions => {
     lastTransactionHash: null,
   });
 
-  const { address: walletAddress, isConnected, signTransaction } = useWallet();
+  const { address: walletAddress, isConnected, signTransaction, ensureConnection } = useWallet();
 
   const handleContractCall = useCallback(async <T>(
     operation: () => Promise<T>,
@@ -80,16 +80,21 @@ export const useContract = (): ContractState & ContractActions => {
     }
 
     return handleContractCall(async () => {
+      // Ensure wallet connection is properly established before signing
+      await ensureConnection();
+
       // Convert amount to contract units (7 decimal places)
       const contractAmount = amount * 10_000_000;
-      
+
+      console.log('💰 Starting deposit:', { amount, contractAmount, walletAddress });
+
       // Use the soroban service with our wallet's signTransaction method
       const result = await sorobanService.depositWithWallet(
-        walletAddress, 
-        contractAmount, 
+        walletAddress,
+        contractAmount,
         signTransaction
       );
-      
+
       if (result.status === 'SUCCESS' && result.hash) {
         setState(prev => ({ ...prev, lastTransactionHash: result.hash! }));
         return result.hash;
@@ -97,7 +102,7 @@ export const useContract = (): ContractState & ContractActions => {
         throw new Error(result.error || 'Deposit failed');
       }
     }, 'Deposit');
-  }, [isConnected, walletAddress, signTransaction, handleContractCall]);
+  }, [isConnected, walletAddress, signTransaction, ensureConnection, handleContractCall]);
 
   const withdraw = useCallback(async (): Promise<string> => {
     if (!isConnected || !walletAddress) {

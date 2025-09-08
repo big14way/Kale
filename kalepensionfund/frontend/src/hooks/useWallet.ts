@@ -19,6 +19,7 @@ interface WalletActions {
   connect: () => Promise<void>;
   disconnect: () => void;
   signTransaction: (xdr: string) => Promise<string>;
+  ensureConnection: () => Promise<void>;
 }
 
 export const useWallet = (): WalletState & WalletActions => {
@@ -53,13 +54,26 @@ export const useWallet = (): WalletState & WalletActions => {
     initWallet();
   }, []);
 
-  // Check if wallet is already connected on mount
+  // Check if wallet is already connected on mount and properly restore wallet kit state
   useEffect(() => {
     const checkConnection = async () => {
+      if (!walletKit) return; // Wait for wallet kit to be initialized
+
       try {
         const storedWallet = localStorage.getItem('stellar-wallet');
         if (storedWallet) {
           const walletData = JSON.parse(storedWallet);
+
+          // IMPORTANT: Re-set the wallet in the wallet kit
+          try {
+            walletKit.setWallet(walletData.wallet.id);
+            console.log('🔄 Restored wallet connection:', walletData.wallet.id);
+          } catch (error) {
+            console.warn('⚠️ Failed to restore wallet in kit, clearing stored data:', error);
+            localStorage.removeItem('stellar-wallet');
+            return;
+          }
+
           setState(prev => ({
             ...prev,
             isConnected: true,
@@ -69,11 +83,13 @@ export const useWallet = (): WalletState & WalletActions => {
         }
       } catch (error) {
         console.error('Error checking wallet connection:', error);
+        // Clear corrupted data
+        localStorage.removeItem('stellar-wallet');
       }
     };
 
     checkConnection();
-  }, []);
+  }, [walletKit]); // Depend on walletKit being initialized
 
   const connect = useCallback(async () => {
     if (!walletKit) {
@@ -129,27 +145,52 @@ export const useWallet = (): WalletState & WalletActions => {
     });
   }, []);
 
-  const signTransaction = useCallback(async (xdr: string): Promise<string> => {
-    if (!walletKit) {
-      throw new Error('Wallet system not initialized');
+  // Ensure wallet connection is properly established
+  const ensureConnection = useCallback(async () => {
+    if (!state.isConnected || !state.address) {
+      console.log('🔄 Wallet not connected, attempting to connect...');
+      await connect();
+      return;
     }
-    
+
+    // If we have a connection but wallet kit isn't set up properly, fix it
+    if (walletKit && state.wallet) {
+      try {
+        walletKit.setWallet(state.wallet.id);
+        console.log('✅ Wallet connection verified');
+      } catch (error) {
+        console.warn('⚠️ Wallet kit setup failed, reconnecting...', error);
+        await connect();
+      }
+    }
+  }, [state.isConnected, state.address, state.wallet, walletKit, connect]);
+
+  const signTransaction = useCallback(async (xdr: string): Promise<string> => {
     if (!state.isConnected || !state.address) {
       throw new Error('Wallet not connected');
     }
 
     try {
-      // Try primary wallet kit first
-      if (walletKit) {
-        const { signedTxXdr } = await walletKit.signTransaction(xdr, {
-          address: state.address,
-          networkPassphrase: 'Test SDF Network ; September 2015',
-        });
-        return signedTxXdr;
+      // Ensure wallet is set in the kit before signing
+      if (walletKit && state.wallet) {
+        try {
+          // Make sure the wallet is properly set
+          walletKit.setWallet(state.wallet.id);
+          console.log('🔐 Signing with wallet kit:', state.wallet.id);
+
+          const { signedTxXdr } = await walletKit.signTransaction(xdr, {
+            address: state.address,
+            networkPassphrase: 'Test SDF Network ; September 2015',
+          });
+          return signedTxXdr;
+        } catch (walletKitError) {
+          console.warn('⚠️ Wallet kit signing failed, trying direct Freighter:', walletKitError);
+          // Fall through to direct Freighter
+        }
       }
-      
+
       // Fallback to direct Freighter integration
-      console.log('🔄 Wallet kit unavailable, trying direct Freighter...');
+      console.log('🔄 Using direct Freighter integration...');
       const { WalletHelper } = await import('../utils/wallet-helper');
       return await WalletHelper.signTransaction(xdr, state.address);
     } catch (error) {
@@ -158,12 +199,13 @@ export const useWallet = (): WalletState & WalletActions => {
         error instanceof Error ? error.message : 'Failed to sign transaction'
       );
     }
-  }, [state.isConnected, state.address, walletKit]);
+  }, [state.isConnected, state.address, state.wallet, walletKit]);
 
   return {
     ...state,
     connect,
     disconnect,
     signTransaction,
+    ensureConnection,
   };
 };

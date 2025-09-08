@@ -4,7 +4,10 @@ import { useContract } from './hooks/useContract';
 import type { Portfolio } from './hooks/useContract';
 import CONFIG from './utils/config';
 import { PriceTest } from './components/PriceTest';
-import { WalletTest } from './components/WalletTest';
+import { BalanceChecker } from './components/BalanceChecker';
+import { KaleHelper } from './components/KaleHelper';
+import { DevTools } from './components/DevTools';
+import { DepositDebugger } from './components/DepositDebugger';
 
 // Ultra-modern gradient button component
 const GradientButton: React.FC<{
@@ -252,11 +255,11 @@ const ModernPortfolioDisplay: React.FC<{ onRefresh?: () => void }> = ({ onRefres
         )}
       </GlassCard>
 
-      {/* Live Market Data */}
+      {/* Price Test (Real API) */}
       <GlassCard className="p-6">
         <h3 className="text-xl font-semibold text-white mb-4 flex items-center space-x-2">
           <span>📈</span>
-          <span>Live Market Data</span>
+          <span>Price Test (Real API)</span>
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="bg-white/5 rounded-xl p-4 text-center">
@@ -288,7 +291,7 @@ const ModernDepositForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
       return;
     }
@@ -310,7 +313,7 @@ const ModernDepositForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) 
         <span>💰</span>
         <span>Deposit KALE</span>
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-white/80 text-sm font-medium mb-2">
@@ -334,7 +337,7 @@ const ModernDepositForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) 
             </div>
           </div>
         </div>
-        
+
         <GradientButton
           onClick={handleSubmit}
           disabled={isLoading || !amount}
@@ -345,6 +348,231 @@ const ModernDepositForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) 
           {isLoading ? 'Processing Deposit...' : 'Deposit KALE Tokens'}
         </GradientButton>
       </form>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+          <p className="text-red-200 text-sm">❌ {error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mt-4 p-4 bg-green-500/20 border border-green-500/30 rounded-xl">
+          <p className="text-green-200 text-sm">✅ {success}</p>
+        </div>
+      )}
+    </GlassCard>
+  );
+};
+
+// Withdraw form
+const ModernWithdrawForm: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const [amount, setAmount] = useState<string>('');
+  const { withdraw, isLoading, error } = useContract();
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!amount || isNaN(Number(amount)) || Number(amount) <= 0) {
+      return;
+    }
+
+    try {
+      setSuccess(null);
+      const txHash = await withdraw(Number(amount));
+      setSuccess('Withdrawal successful! Your KALE tokens have been returned to your wallet.');
+      setAmount('');
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Withdraw failed:', error);
+    }
+  };
+
+  return (
+    <GlassCard className="p-6">
+      <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-2">
+        <span>💸</span>
+        <span>Withdraw KALE</span>
+      </h2>
+
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-white/80 text-sm font-medium mb-2">
+            Amount (KALE Tokens)
+          </label>
+          <div className="relative">
+            <input
+              type="number"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              placeholder="0.00"
+              min="0"
+              step="0.0000001"
+              disabled={isLoading}
+              className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white
+                       placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-red-400
+                       focus:border-transparent transition-all duration-200"
+            />
+            <div className="absolute right-3 top-3 text-white/60 font-medium">
+              KALE
+            </div>
+          </div>
+        </div>
+
+        <GradientButton
+          onClick={handleSubmit}
+          disabled={isLoading || !amount}
+          loading={isLoading}
+          size="lg"
+          variant="danger"
+        >
+          {isLoading ? 'Processing Withdrawal...' : 'Withdraw KALE Tokens'}
+        </GradientButton>
+      </form>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+          <p className="text-red-200 text-sm">❌ {error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mt-4 p-4 bg-green-500/20 border border-green-500/30 rounded-xl">
+          <p className="text-green-200 text-sm">✅ {success}</p>
+        </div>
+      )}
+    </GlassCard>
+  );
+};
+
+// Risk Level Selector
+const ModernRiskSelector: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const [selectedRisk, setSelectedRisk] = useState<number>(2);
+  const { setRiskLevel, isLoading, error } = useContract();
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const riskLevels = [
+    { level: 1, name: 'Conservative', emoji: '🛡️', color: 'text-blue-400', description: 'Low risk, stable returns' },
+    { level: 2, name: 'Moderate', emoji: '⚖️', color: 'text-yellow-400', description: 'Balanced risk and reward' },
+    { level: 3, name: 'Aggressive', emoji: '🚀', color: 'text-red-400', description: 'High risk, high potential returns' },
+  ];
+
+  const handleSubmit = async () => {
+    try {
+      setSuccess(null);
+      const txHash = await setRiskLevel(selectedRisk);
+      setSuccess(`Risk level updated to ${riskLevels[selectedRisk - 1].name}!`);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Risk level update failed:', error);
+    }
+  };
+
+  return (
+    <GlassCard className="p-6">
+      <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-2">
+        <span>🎯</span>
+        <span>Risk Profile</span>
+      </h2>
+
+      <div className="space-y-4 mb-6">
+        {riskLevels.map((risk) => (
+          <div
+            key={risk.level}
+            onClick={() => setSelectedRisk(risk.level)}
+            className={`p-4 rounded-xl border-2 cursor-pointer transition-all duration-200 ${
+              selectedRisk === risk.level
+                ? 'border-purple-400 bg-purple-500/20'
+                : 'border-white/20 bg-white/5 hover:border-white/40'
+            }`}
+          >
+            <div className="flex items-center space-x-3">
+              <span className="text-2xl">{risk.emoji}</span>
+              <div className="flex-1">
+                <h3 className={`font-semibold ${risk.color}`}>{risk.name}</h3>
+                <p className="text-white/70 text-sm">{risk.description}</p>
+              </div>
+              <div className={`w-4 h-4 rounded-full border-2 ${
+                selectedRisk === risk.level
+                  ? 'border-purple-400 bg-purple-400'
+                  : 'border-white/40'
+              }`} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <GradientButton
+        onClick={handleSubmit}
+        disabled={isLoading}
+        loading={isLoading}
+        size="lg"
+        variant="primary"
+      >
+        {isLoading ? 'Updating Risk Level...' : 'Update Risk Profile'}
+      </GradientButton>
+
+      {error && (
+        <div className="mt-4 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
+          <p className="text-red-200 text-sm">❌ {error}</p>
+        </div>
+      )}
+
+      {success && (
+        <div className="mt-4 p-4 bg-green-500/20 border border-green-500/30 rounded-xl">
+          <p className="text-green-200 text-sm">✅ {success}</p>
+        </div>
+      )}
+    </GlassCard>
+  );
+};
+
+// Rebalance Component
+const ModernRebalancePanel: React.FC<{ onSuccess?: () => void }> = ({ onSuccess }) => {
+  const { rebalance, isLoading, error } = useContract();
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const handleRebalance = async () => {
+    try {
+      setSuccess(null);
+      const txHash = await rebalance();
+      setSuccess('Portfolio rebalanced successfully! Your assets have been optimized according to your risk profile.');
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error('Rebalance failed:', error);
+    }
+  };
+
+  return (
+    <GlassCard className="p-6">
+      <h2 className="text-2xl font-bold text-white mb-6 flex items-center space-x-2">
+        <span>🔄</span>
+        <span>Rebalance Portfolio</span>
+      </h2>
+
+      <div className="mb-6">
+        <p className="text-white/80 mb-4">
+          Rebalancing optimizes your portfolio allocation based on your current risk profile and market conditions.
+        </p>
+        <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+          <h4 className="text-blue-400 font-semibold mb-2">📊 What happens during rebalancing:</h4>
+          <ul className="text-blue-200 text-sm space-y-1">
+            <li>• Assets are redistributed according to your risk level</li>
+            <li>• Portfolio is optimized for current market conditions</li>
+            <li>• Maintains target allocation percentages</li>
+          </ul>
+        </div>
+      </div>
+
+      <GradientButton
+        onClick={handleRebalance}
+        disabled={isLoading}
+        loading={isLoading}
+        size="lg"
+        variant="primary"
+      >
+        {isLoading ? 'Rebalancing Portfolio...' : 'Rebalance Now'}
+      </GradientButton>
 
       {error && (
         <div className="mt-4 p-4 bg-red-500/20 border border-red-500/30 rounded-xl">
@@ -483,20 +711,36 @@ const App: React.FC = () => {
                 </p>
               </GlassCard>
 
-              {/* Test Components */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <PriceTest />
-                <WalletTest />
-              </div>
+              {/* Balance Check - Critical for deposits */}
+              <BalanceChecker />
+
+              {/* KALE Token Helper */}
+              <KaleHelper />
+
+              {/* Deposit Debugger - Help diagnose deposit issues */}
+              <DepositDebugger />
+
+              {/* Development Tools */}
+              <DevTools />
+
+              {/* Price Test Component */}
+              <PriceTest />
 
               {/* Main Dashboard */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2">
                   <ModernPortfolioDisplay key={refreshTrigger} onRefresh={() => setRefreshTrigger(prev => prev + 1)} />
                 </div>
-                <div>
+                <div className="space-y-6">
                   <ModernDepositForm onSuccess={handleSuccess} />
+                  <ModernWithdrawForm onSuccess={handleSuccess} />
                 </div>
+              </div>
+
+              {/* Additional Functions */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <ModernRiskSelector onSuccess={handleSuccess} />
+                <ModernRebalancePanel onSuccess={handleSuccess} />
               </div>
             </div>
           ) : (

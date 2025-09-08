@@ -23,7 +23,7 @@ export class RealPriceService {
       const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
       const data = await response.json();
       
-      const price = data.bitcoin?.usd || 45000; // Fallback to $45,000
+      const price = data.bitcoin?.usd || 111235; // Fallback to current market price ~$111,235
       
       // Cache the result
       this.cache[cacheKey] = { price, timestamp: now };
@@ -32,7 +32,7 @@ export class RealPriceService {
       return price;
     } catch (error) {
       console.warn('⚠️ Failed to fetch real BTC price, using fallback:', error);
-      return 45000; // Fallback price
+      return 111235; // Fallback to current market price
     }
   }
 
